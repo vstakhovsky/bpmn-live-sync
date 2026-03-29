@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BPMN Live Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.3.1/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@18.3.1/dist/assets/bpmn-font/css/bpmn.css" />
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif; background: #f7f7f8; }
+      header { padding: 12px 16px; border-bottom: 1px solid #ddd; background: white; display: flex; justify-content: space-between; align-items: center; }
+      #canvas { height: calc(100% - 54px); }
+      .badge { font-size: 12px; color: #444; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>BPMN Live Viewer</strong>
+      <div class="badge" id="status">Waiting for updates…</div>
+    </header>
+    <div id="canvas"></div>
+
+    <script src="https://unpkg.com/bpmn-js@18.3.1/dist/bpmn-viewer.development.js"></script>
+    <script>
+      const viewer = new BpmnJS({ container: '#canvas' });
+      const status = document.getElementById('status');
+
+      async function refresh() {
+        const response = await fetch('/diagram.xml?_=' + Date.now());
+        const xml = await response.text();
+        await viewer.importXML(xml);
+        const canvas = viewer.get('canvas');
+        canvas.zoom('fit-viewport');
+      }
+
+      const source = new EventSource('/events');
+      source.onmessage = async (event) => {
+        const payload = JSON.parse(event.data || '{}');
+        status.textContent = payload.updatedAt ? `Last update: ${payload.updatedAt}` : 'Connected';
+        await refresh();
+      };
+
+      refresh().catch((error) => {
+        status.textContent = 'Failed to load diagram';
+        console.error(error);
+      });
+    </script>
+  </body>
+</html>

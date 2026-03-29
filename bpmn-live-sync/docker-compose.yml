@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  sync-server:
+    image: node:22-bullseye
+    working_dir: /workspace
+    command: bash -lc "npm install && npm run dev --workspace @bpmn-live-sync/sync-server"
+    ports:
+      - "8787:8787"
+    env_file:
+      - .env.example
+    volumes:
+      - ./:/workspace

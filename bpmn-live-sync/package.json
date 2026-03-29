@@ -1,0 +1,14 @@
+{
+  "name": "bpmn-live-sync",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @bpmn-live-sync/sync-server",
+    "viewer": "npm run viewer --workspace @bpmn-live-sync/sync-server",
+    "build": "npm run build --workspace @bpmn-live-sync/sync-server",
+    "start": "npm run start --workspace @bpmn-live-sync/sync-server"
+  }
+}

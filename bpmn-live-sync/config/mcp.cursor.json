@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "bpmn-js": {
+      "command": "node",
+      "args": [
+        "/ABSOLUTE/PATH/TO/bpmn-js-mcp/dist/index.js"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "miro": {
+      "url": "https://mcp.miro.com/"
+    }
+  }
+}
